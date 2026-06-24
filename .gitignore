@@ -1,0 +1,66 @@
+# =========================
+# DEPENDENCIES (FRONTEND + BACKEND)
+# =========================
+node_modules
+**/node_modules
+
+# lock files (CI/CD builds clean installs)
+package-lock.json
+yarn.lock
+
+# =========================
+# ENV FILES (SECURITY)
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# LOGS
+# =========================
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# =========================
+# OS FILES
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# BUILD OUTPUTS
+# =========================
+dist
+build
+
+# =========================
+# VITE / FRONTEND CACHE
+# =========================
+.vite
+node_modules/.vite
+
+# =========================
+# DOCKER / SYSTEM FILES
+# =========================
+*.pid
+*.seed
+*.pid.lock
+
+# =========================
+# DOCKER COMPOSE OVERRIDES
+# =========================
+docker-compose.override.yml
+
+# =========================
+# IDE / EDITORS
+# =========================
+.vscode
+.idea
+
+# =========================
+# OPTIONAL LOCAL VOLUMES
+# =========================
+mongo-data
