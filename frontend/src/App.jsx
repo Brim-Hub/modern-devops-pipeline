@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "./App.css";
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -6,13 +7,16 @@ function App() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const API =
-    import.meta.env.VITE_API_URL 
+  const API = import.meta.env.VITE_API_URL;
 
   const loadUsers = async () => {
-    const res = await fetch(`${API}/api/users`);
-    const data = await res.json();
-    setUsers(data);
+    try {
+      const res = await fetch(`${API}/api/users`);
+      const data = await res.json();
+      setUsers(data);
+    } catch (err) {
+      console.error("Failed to load users", err);
+    }
   };
 
   useEffect(() => {
@@ -21,65 +25,76 @@ function App() {
 
   const submit = async (e) => {
     e.preventDefault();
-
     setLoading(true);
 
-    await fetch(`${API}/api/users`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name,
-        email,
-      }),
-    });
+    try {
+      await fetch(`${API}/api/users`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email }),
+      });
 
-    setName("");
-    setEmail("");
-
-    await loadUsers();
+      setName("");
+      setEmail("");
+      await loadUsers();
+    } catch (err) {
+      console.error("Failed to add user", err);
+    }
 
     setLoading(false);
   };
 
   return (
-    <div
-      style={{
-        maxWidth: "700px",
-        margin: "50px auto",
-        fontFamily: "Arial",
-      }}
-    >
-      <h1>MERN DevOps Demo</h1>
+    <div className="app">
+      <div className="container">
+        <h1 className="title">🚀 MERN DevOps Dashboard</h1>
 
-      <form onSubmit={submit}>
-        <input
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+        <form className="form" onSubmit={submit}>
+          <input
+            className="input"
+            placeholder="Enter name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
 
-        <input
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+          <input
+            className="input"
+            placeholder="Enter email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
 
-        <button disabled={loading}>
-          {loading ? "Saving..." : "Add User"}
-        </button>
-      </form>
+          <button className="button" disabled={loading}>
+            {loading ? "Saving..." : "Add User"}
+          </button>
+        </form>
 
-      <hr />
+        <div className="card">
+          <h2 className="subtitle">Users</h2>
 
-      <h2>Users</h2>
-
-      {users.map((user) => (
-        <div key={user._id}>
-          <strong>{user.name}</strong> - {user.email}
+          {users.length === 0 ? (
+            <p className="empty">No users found</p>
+          ) : (
+            <div className="list">
+              {users.map((user) => (
+                <div className="user" key={user._id}>
+                  <div className="avatar">
+                    {user.name?.charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <div className="name">{user.name}</div>
+                    <div className="email">{user.email}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-      ))}
+      </div>
     </div>
   );
 }
